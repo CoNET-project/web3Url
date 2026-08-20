@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CoNET Web3 Gateway Settings</title>
+    <style>
+      body { max-width: 680px; margin: 40px auto; padding: 0 20px; font: 16px system-ui, sans-serif; color: #172033; }
+      label { display: block; margin: 20px 0 8px; font-weight: 600; }
+      input, textarea { box-sizing: border-box; width: 100%; padding: 10px; border: 1px solid #b8c0d0; border-radius: 8px; }
+      textarea { min-height: 120px; font-family: ui-monospace, monospace; }
+      button { margin-top: 14px; padding: 10px 16px; border: 0; border-radius: 8px; background: #0051d1; color: white; cursor: pointer; }
+      #identity { padding: 10px; background: #eef3ff; border-radius: 8px; }
+      #status { min-height: 24px; color: #3a465d; }
+    </style>
+  </head>
+  <body>
+    <h1>CoNET Web3 Gateway</h1>
+    <p id="identity">Checking local identity…</p>
+    <form id="identity-form">
+      <label for="password">Unlock password</label>
+      <input id="password" type="password" minlength="12" autocomplete="new-password" required>
+      <button type="submit">Create or unlock identity</button>
+    </form>
+    <form id="entries-form">
+      <label for="entries">HTTPS gateway entries</label>
+      <textarea id="entries" placeholder="https://entry.example/post"></textarea>
+      <button type="submit">Save gateway entries</button>
+    </form>
+    <p id="status" role="status"></p>
+    <script src="options.js"></script>
+  </body>
+</html>
