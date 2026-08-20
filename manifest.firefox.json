@@ -1,0 +1,18 @@
+{
+  "manifest_version": 3,
+  "name": "CoNET Web3 Gateway",
+  "version": "0.1.0",
+  "description": "Routes web3:// resource requests through the CoNET L0 gateway.",
+  "permissions": ["storage", "webRequest"],
+  "host_permissions": ["<all_urls>"],
+  "background": { "scripts": ["background.js"] },
+  "content_scripts": [{
+    "matches": ["<all_urls>"],
+    "js": ["pageBridge.js"],
+    "run_at": "document_start"
+  }],
+  "action": { "default_title": "CoNET Web3 Gateway" },
+  "browser_specific_settings": {
+    "gecko": { "id": "web3-gateway@conet.network" }
+  }
+}
