@@ -51,7 +51,11 @@ export async function gatewayFetch(
   const responseJson = await decryptWithPgp(responseArmor, identity.pgpPrivateKeyArmored)
   const response = JSON.parse(responseJson) as GatewayResponse
   assertGatewayResponse(response)
-  if (response.requestId !== request.requestId || response.expiresAt < now) {
+  if (
+    response.requestId !== request.requestId
+    || response.nonce !== request.nonce
+    || response.expiresAt < now
+  ) {
     throw new Error('Gateway response does not match request')
   }
   return response
@@ -60,7 +64,9 @@ export async function gatewayFetch(
 function sanitizeHeaders(headers: Record<string, string> | undefined): Record<string, string> {
   const allowed = new Set(['accept', 'content-type', 'if-none-match', 'if-modified-since'])
   return Object.fromEntries(
-    Object.entries(headers ?? {}).filter(([key]) => allowed.has(key.toLowerCase()))
+    Object.entries(headers ?? {})
+      .filter(([key]) => allowed.has(key.toLowerCase()))
+      .sort(([left], [right]) => (left < right ? -1 : left > right ? 1 : 0))
   )
 }
 

@@ -1,7 +1,11 @@
 import { gatewayFetch } from '../protocol/gatewayClient'
 import { gatewayResponseToResponse } from './blobResponse'
 import { assertRequestAllowed, sanitizeResourceHeaders } from './requestPolicy'
-import { prepareGatewayTarget, unlockIdentity } from './gatewayPreparation'
+import {
+  canonicalResolvedTargetUrl,
+  prepareGatewayTarget,
+  unlockIdentity
+} from './gatewayPreparation'
 import type { EntryPool } from '../routing/entryPool'
 
 export type Web3FetchDependencies = {
@@ -37,7 +41,7 @@ export async function fetchWeb3ResourceWithIdentity(
   const response = await gatewayFetch(
     {
       from: identity.walletAddress,
-      targetUrl: rawUrl,
+      targetUrl: canonicalResolvedTargetUrl(target.parsed, target.eoa),
       method: request.method,
       path: target.parsed.path,
       query: target.parsed.query,

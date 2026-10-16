@@ -36,7 +36,12 @@ export function assertGatewayResponse(value: unknown): asserts value is GatewayR
   if (response.v !== 1 || response.type !== 'conet_web3_response_v1') {
     throw new Error('Unsupported gateway response version')
   }
-  if (!response.requestId || !Number.isInteger(response.status)) {
+  if (
+    !response.requestId
+    || !Number.isInteger(response.status)
+    || !response.nonce
+    || !Number.isInteger(response.expiresAt)
+  ) {
     throw new Error('Malformed gateway response')
   }
   if (typeof response.bodyBase64 !== 'string' || typeof response.contentType !== 'string') {

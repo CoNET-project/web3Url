@@ -12,7 +12,21 @@
     "js": ["pageBridge.js"],
     "run_at": "document_start"
   }],
-  "action": { "default_title": "CoNET Web3 Gateway" },
+  "action": {
+    "default_title": "CoNET Web3 Gateway",
+    "default_icon": {
+      "16": "icon-16.png",
+      "32": "icon-32.png",
+      "48": "icon-48.png",
+      "128": "icon-128.png"
+    }
+  },
+  "icons": {
+    "16": "icon-16.png",
+    "32": "icon-32.png",
+    "48": "icon-48.png",
+    "128": "icon-128.png"
+  },
   "browser_specific_settings": {
     "gecko": { "id": "web3-gateway@conet.network" }
   }

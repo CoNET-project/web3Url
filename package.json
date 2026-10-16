@@ -6,7 +6,12 @@
   "scripts": {
     "build": "node scripts/build.mjs",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "build:host-gateway": "tsc -p host-gateway/tsconfig.json",
+    "start:host-gateway": "node host-gateway/dist/index.js",
+    "provision:official-gateway": "node host-gateway/scripts/provisionOfficialGateway.mjs",
+    "start:browser-test": "node scripts/browser-test-server.mjs",
+    "real:smoke": "node scripts/real-web3-smoke.mjs"
   },
   "dependencies": {
     "ethers": "^6.17.0",
@@ -14,6 +19,7 @@
   },
   "devDependencies": {
     "@types/chrome": "^0.2.6",
+    "@types/node": "^24.13.3",
     "typescript": "^7.0.2",
     "vite": "^8.2.2",
     "vitest": "^4.1.11"

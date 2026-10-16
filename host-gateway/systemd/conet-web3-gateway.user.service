@@ -1,0 +1,20 @@
+[Unit]
+Description=CoNET official web3:// host gateway (user service)
+After=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=%h/web3Url
+EnvironmentFile=%h/.config/conet-web3-gateway.env
+ExecStart=/usr/bin/node %h/web3Url/host-gateway/dist/index.js
+Restart=always
+RestartSec=3
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=%h/web3-gateway-secrets
+UMask=0077
+
+[Install]
+WantedBy=default.target

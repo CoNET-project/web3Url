@@ -10,7 +10,7 @@ function isAllowedEntry(value: unknown): value is string {
   if (typeof value !== 'string') return false
   try {
     const url = new URL(value)
-    return url.protocol === 'https:' && Boolean(url.hostname)
+    return (url.protocol === 'http:' || url.protocol === 'https:') && Boolean(url.hostname)
   } catch {
     return false
   }

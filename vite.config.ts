@@ -3,7 +3,9 @@ import { defineConfig } from 'vite'
 export default defineConfig({
   build: {
     outDir: 'dist',
-    emptyOutDir: process.env.WEB3_ENTRY !== 'pageBridge',
+        // scripts/build.mjs clears dist once before building all entries.
+        // Each subsequent Vite build must preserve the other extension scripts.
+        emptyOutDir: false,
     rollupOptions: {
       input: process.env.WEB3_ENTRY === 'pageBridge'
         ? 'src/content/pageBridge.ts'

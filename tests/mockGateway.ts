@@ -5,6 +5,7 @@ export function createMockGatewayTransport(options: {
   routePrivateKeyArmored: string
   targetUserPrivateKeyArmored: string
   requesterPublicKeyArmored: string
+  responseNonce?: string
 }): EntryTransport {
   return async (_entry, body, _signal) => {
     const routeWork = JSON.parse(
@@ -22,7 +23,7 @@ export function createMockGatewayTransport(options: {
       headers: { 'x-conet-mock': 'true' },
       contentType: 'text/plain',
       bodyBase64: btoa('mock gateway response'),
-      nonce: signedRequest.request.nonce,
+      nonce: options.responseNonce ?? signedRequest.request.nonce,
       expiresAt: Math.floor(Date.now() / 1000) + 60
     }
     return encryptForUserPgp(JSON.stringify(response), options.requesterPublicKeyArmored)

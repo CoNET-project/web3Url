@@ -36,13 +36,14 @@ document.querySelector<HTMLFormElement>('#entries-form')!.addEventListener('subm
   const values = entries.value.split(/\r?\n/).map(value => value.trim()).filter(Boolean)
   const valid = values.every(value => {
     try {
-      return new URL(value).protocol === 'https:'
+      const protocol = new URL(value).protocol
+      return protocol === 'http:' || protocol === 'https:'
     } catch {
       return false
     }
   })
   if (!valid || !values.length) {
-    statusEl.textContent = 'Enter one or more HTTPS entry URLs, one per line.'
+    statusEl.textContent = 'Enter one or more HTTP or HTTPS entry URLs, one per line.'
     return
   }
   await chrome.storage.local.set({ 'conet.web3.gateway.entries.v1': [...new Set(values)] })

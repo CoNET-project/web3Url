@@ -1,6 +1,5 @@
 import { createCommunicationIdentity } from '../identity/createIdentity'
 import { hasIdentity, loadIdentity, saveIdentity } from '../storage/encryptedVault'
-import { prepareGatewayTarget, unlockIdentity } from '../browser/gatewayPreparation'
 import { loadGatewayEntries } from '../storage/gatewayConfig'
 import { fetchWeb3ResourceWithIdentity } from '../browser/protocolHandler'
 import { EntryPool } from '../routing/entryPool'
@@ -88,4 +87,3 @@ async function handleMessage(message: Message) {
 chrome.runtime.onInstalled.addListener(() => {
   // Creation is initiated by the options page after explicit user intent.
 })
-

@@ -37,4 +37,34 @@ describe('mock gateway round trip', () => {
     expect(response.requestId).toBeTruthy()
     expect(response.headers['x-conet-mock']).toBe('true')
   })
+
+  it('rejects a response bound to a different nonce', async () => {
+    const requester = await createCommunicationIdentity()
+    const target = await createCommunicationIdentity()
+    const transport = createMockGatewayTransport({
+      routePrivateKeyArmored: target.pgpPrivateKeyArmored,
+      targetUserPrivateKeyArmored: target.pgpPrivateKeyArmored,
+      requesterPublicKeyArmored: requester.pgpPublicKeyArmored,
+      responseNonce: 'different-request-nonce'
+    })
+    const entries = new EntryPool(['https://entry-a.invalid/post'], transport)
+
+    await expect(gatewayFetch(
+      {
+        from: requester.walletAddress,
+        targetUrl: 'web3://0x2222222222222222222222222222222222222222/index.html',
+        method: 'GET',
+        path: '/index.html',
+        query: ''
+      },
+      requester,
+      {
+        userPgpKeyId: target.pgpKeyId,
+        userPublicKeyArmored: target.pgpPublicKeyArmored,
+        routePgpKeyId: target.pgpKeyId,
+        routePublicKeyArmored: target.pgpPublicKeyArmored
+      },
+      entries
+    )).rejects.toThrow('Gateway response does not match request')
+  })
 })
