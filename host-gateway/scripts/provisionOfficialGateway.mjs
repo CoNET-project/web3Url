@@ -33,13 +33,13 @@ const encryptedKey = await encryptForRegistration(pgpPrivateArmor, wallet.privat
 const registration = await fetch(registerUrl, {
   method: 'POST',
   headers: { 'content-type': 'application/json' },
-  body: JSON.stringify({
+  body: JSON.stringify(await signRegisterBody(wallet, {
     wallet: wallet.address,
     keyID: pgpKeyId,
     publicKeyArmored: Buffer.from(pgpPublicArmor, 'utf8').toString('base64'),
     encrypKeyArmored: encryptedKey,
     routeKeyID: routeKeyId,
-  }),
+  })),
 })
 const registrationBody = await registration.json().catch(() => ({}))
 if (!registration.ok || registrationBody.ok === false) {
@@ -85,4 +85,29 @@ async function encryptForRegistration(armor, password) {
   result.set(iv)
   result.set(ciphertext, iv.length)
   return Buffer.from(result).toString('base64')
+}
+
+// Signed regiestChatRoute body (wallet EIP-191 signature, fresh timestamp + nonce).
+// Message format must match x402sdk src/chatRouteAuth.ts.
+async function signRegisterBody(signer, f) {
+  const fields = {
+    wallet: f.wallet,
+    keyID: String(f.keyID).trim(),
+    publicKeyArmored: String(f.publicKeyArmored).trim(),
+    encrypKeyArmored: String(f.encrypKeyArmored).trim(),
+    routeKeyID: String(f.routeKeyID).trim(),
+    timestamp: Date.now(),
+    nonce: ethers.hexlify(ethers.randomBytes(16)),
+  }
+  const message = [
+    'Beamio regiestChatRoute',
+    `wallet:${fields.wallet.toLowerCase()}`,
+    `keyID:${fields.keyID}`,
+    `publicKeyArmoredHash:${ethers.keccak256(ethers.toUtf8Bytes(fields.publicKeyArmored))}`,
+    `encrypKeyArmoredHash:${ethers.keccak256(ethers.toUtf8Bytes(fields.encrypKeyArmored))}`,
+    `routeKeyID:${fields.routeKeyID}`,
+    `timestamp:${fields.timestamp}`,
+    `nonce:${fields.nonce.toLowerCase()}`,
+  ].join('\n')
+  return { ...fields, signature: await signer.signMessage(message) }
 }
